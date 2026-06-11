@@ -1,0 +1,1017 @@
+/**
+ * 朝夕心记 - diary.css
+ * 样式参考：心晴手账、信封投递等同级功能
+ * 使用项目 CSS 变量：--primary-bg, --secondary-bg, --accent-color, --text-primary, --text-secondary, --border-color, --radius, --font-family
+ */
+
+/* ================================================================
+   迷你日历弹窗
+   ================================================================ */
+.mini-calendar-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: miniCalFadeIn 0.2s ease;
+}
+
+@keyframes miniCalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.mini-calendar-card {
+    background: var(--secondary-bg);
+    border-radius: 18px;
+    padding: 20px;
+    width: 85%;
+    max-width: 320px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    animation: miniCalPopIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes miniCalPopIn {
+    from { opacity: 0; transform: scale(0.85); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.mini-cal-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.mini-cal-nav-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.2s ease;
+}
+
+.mini-cal-nav-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+}
+
+.mini-cal-nav-btn:active {
+    transform: scale(0.9);
+}
+
+.mini-cal-nav-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.mini-cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    margin-bottom: 6px;
+}
+
+.mini-cal-weekdays div {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-secondary);
+    padding: 4px 0;
+    font-weight: 500;
+}
+
+.mini-cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+}
+
+.mini-cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--text-primary);
+    transition: all 0.15s ease;
+    cursor: pointer;
+    gap: 2px;
+}
+
+.mini-cal-day:not(.empty):hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.mini-cal-day.mini-cal-today {
+    background: var(--accent-color);
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* 小圆点指示器 */
+.mini-cal-dots {
+    display: flex;
+    gap: 2px;
+    height: 6px;
+    align-items: center;
+}
+
+.mini-cal-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.dot-todo { background: #4d96ff; }
+.dot-habit { background: #6bcb77; }
+.dot-anniversary { background: #fd79a8; }
+.dot-period { background: #B85450; }
+
+.mini-cal-today .mini-cal-dot {
+    opacity: 0.8;
+    background: #fff;
+}
+
+/* 图例 */
+.mini-cal-legend {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.mini-cal-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: var(--text-secondary);
+}
+
+.mini-cal-legend-item .mini-cal-dot {
+    width: 5px;
+    height: 5px;
+}
+
+.mini-cal-close-btn {
+    display: block;
+    width: 100%;
+    margin-top: 16px;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-family: var(--font-family);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.mini-cal-close-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+}
+
+/* ================================================================
+   日期详情弹窗
+   ================================================================ */
+.mini-cal-detail-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 3100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: miniCalFadeIn 0.2s ease;
+}
+
+.mini-cal-detail-card {
+    background: var(--secondary-bg);
+    border-radius: 18px;
+    width: 85%;
+    max-width: 340px;
+    max-height: 70vh;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    animation: miniCalPopIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    display: flex;
+    flex-direction: column;
+}
+
+.mini-cal-detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.mini-cal-detail-date {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.mini-cal-detail-close {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.2s ease;
+}
+
+.mini-cal-detail-close:hover {
+    background: rgba(255, 107, 107, 0.1);
+    color: #ff6b6b;
+}
+
+.mini-cal-detail-body {
+    padding: 12px 20px 20px;
+    overflow-y: auto;
+}
+
+.mini-cal-detail-group {
+    margin-bottom: 14px;
+}
+
+.mini-cal-detail-group:last-child {
+    margin-bottom: 0;
+}
+
+.mini-cal-detail-group-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.mini-cal-detail-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+}
+
+.mini-cal-detail-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.mini-cal-detail-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.mini-cal-detail-label {
+    font-size: 14px;
+    color: var(--text-primary);
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+.mini-cal-detail-sub {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.mini-cal-detail-empty {
+    text-align: center;
+    padding: 30px 0;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+/* ========== 标签页切换栏 ========== */
+.diary-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    background: var(--secondary-bg);
+    border-radius: 12px;
+    padding: 4px;
+}
+
+.diary-tab-btn {
+    flex: 1;
+    padding: 8px 6px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-family: var(--font-family);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.diary-tab-btn:hover {
+    background: rgba(var(--accent-color-rgb, 255, 107, 107), 0.08);
+    color: var(--text-primary);
+}
+
+.diary-tab-btn.active {
+    background: rgba(var(--accent-color-rgb, 255, 107, 107), 0.16);
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+.diary-tab-btn i {
+    font-size: 13px;
+}
+
+/* ========== 面板容器 ========== */
+.diary-panel {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+    padding-right: 4px;
+}
+
+/* 待办面板内部布局 */
+.diary-todo-panel,
+.diary-habit-panel {
+    display: flex;
+    flex-direction: column;
+}
+
+/* 待办二级分类标签 */
+.diary-sub-tabs {
+    display: flex;
+    gap: 6px;
+    padding: 8px 0 12px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 8px;
+    overflow-x: auto;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    background: var(--secondary-bg);
+    z-index: 5;
+}
+
+.diary-sub-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.diary-sub-tab-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 20px;
+    background: var(--border-color);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-family: var(--font-family);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.diary-sub-tab-btn:hover {
+    background: var(--accent-color);
+    color: #fff;
+}
+
+.diary-sub-tab-btn.active {
+    background: var(--accent-color);
+    color: #fff;
+}
+
+.diary-todo-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+#diary-todo-compose {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+#diary-todo-compose .diary-todo-scroll-area {
+    padding-bottom: 12px;
+}
+
+.diary-todo-compose-actions {
+    flex-shrink: 0;
+    padding: 12px 0 0;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 8px;
+}
+
+/* ========== 习惯打卡面板（仿制待办） ========== */
+.diary-habit-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+#diary-habit-compose {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+#diary-habit-compose .diary-habit-scroll-area {
+    padding-bottom: 12px;
+}
+
+.diary-habit-compose-paper {
+    background: linear-gradient(135deg, #fff9f0 0%, #fff5f5 100%);
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid rgba(255, 182, 193, 0.3);
+    box-shadow: 0 4px 16px rgba(255, 182, 193, 0.15);
+}
+
+.diary-habit-compose-heading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ff8fa3;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed rgba(255, 143, 163, 0.3);
+}
+
+.diary-habit-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.diary-habit-form-field label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.diary-habit-form-field select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 10px;
+    background: var(--primary-bg);
+    color: var(--text-primary);
+    font-size: 13px;
+    font-family: var(--font-family);
+    outline: none;
+    cursor: pointer;
+}
+
+.diary-habit-compose-actions {
+    flex-shrink: 0;
+    padding: 12px 0 0;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 8px;
+}
+
+/* ========== 朝夕心记整体布局（参考信封投递） ========== */
+.diary-modal-wrapper {
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh;
+    overflow: hidden;
+}
+
+.diary-modal-header {
+    flex-shrink: 0;
+    margin-bottom: 12px;
+}
+
+.diary-tabs {
+    flex-shrink: 0;
+}
+
+.diary-panel {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+/* 底部按钮区域 */
+.diary-modal-wrapper > .modal-buttons {
+    flex-shrink: 0;
+    margin-top: auto;
+}
+
+.diary-panel::-webkit-scrollbar {
+    width: 3px;
+}
+
+.diary-panel::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+
+/* ========== 空状态 ========== */
+.diary-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+/* ========== 分区标签 ========== */
+.diary-section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.diary-section-label i {
+    font-size: 12px;
+    color: var(--accent-color);
+}
+
+/* ========== 通用输入框 ========== */
+.diary-input {
+    width: 100%;
+    padding: 9px 14px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 13px;
+    background: var(--primary-bg);
+    color: var(--text-primary);
+    outline: none;
+    box-sizing: border-box;
+    font-family: var(--font-family);
+    transition: border-color 0.2s ease;
+}
+
+.diary-input:focus {
+    border-color: var(--accent-color);
+}
+
+.diary-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+/* ========== 通用添加栏 ========== */
+.diary-add-bar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+
+.diary-add-bar .diary-input {
+    flex: 1;
+    min-width: 0;
+}
+
+.diary-add-bar select {
+    padding: 9px 10px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 10px;
+    background: var(--primary-bg);
+    color: var(--text-primary);
+    font-size: 13px;
+    outline: none;
+    font-family: var(--font-family);
+    cursor: pointer;
+}
+
+.diary-add-btn {
+    padding: 9px 16px;
+    border: none;
+    border-radius: 10px;
+    background: var(--accent-color);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font-family);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.diary-add-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.diary-add-btn:active {
+    transform: scale(0.97);
+}
+
+/* ================================================================
+   一、待办事项
+   ================================================================ */
+.diary-todo-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--primary-bg);
+    border-radius: 12px;
+    margin-bottom: 8px;
+    border: 1px solid var(--border-color);
+    transition: all 0.25s ease;
+    position: relative;
+}
+
+.diary-todo-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.diary-todo-item.done {
+    opacity: 0.6;
+}
+
+.diary-todo-check {
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-size: 11px;
+    color: transparent;
+}
+
+.diary-todo-check:hover {
+    border-color: var(--accent-color);
+    background: rgba(var(--accent-color-rgb, 255, 107, 107), 0.1);
+}
+
+.diary-todo-item.done .diary-todo-check {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    color: #fff;
+}
+
+.diary-todo-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.diary-todo-text {
+    font-size: 14px;
+    color: var(--text-primary);
+    word-break: break-word;
+}
+
+.diary-todo-text.done {
+    text-decoration: line-through;
+    color: var(--text-secondary);
+}
+
+.diary-todo-meta {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.diary-todo-priority {
+    font-weight: 600;
+}
+
+.diary-todo-due {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.diary-todo-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.diary-todo-edit,
+.diary-todo-delete {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    opacity: 0;
+    transition: all 0.2s ease;
+    font-size: 12px;
+}
+
+.diary-todo-item:hover .diary-todo-edit,
+.diary-todo-item:hover .diary-todo-delete {
+    opacity: 1;
+}
+
+.diary-todo-edit:hover {
+    background: rgba(77, 150, 255, 0.1);
+    color: #4d96ff;
+}
+
+.diary-todo-delete:hover {
+    background: rgba(255, 107, 107, 0.1);
+    color: #ff6b6b;
+}
+
+/* ========== 待办创建表单（信封式） ========== */
+#diary-todo-compose {
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+.diary-todo-compose-paper {
+    background: var(--primary-bg);
+    border-radius: 14px;
+    padding: 16px;
+    border: 1px solid var(--border-color);
+}
+
+.diary-todo-compose-heading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+}
+
+.diary-todo-compose-heading i {
+    color: var(--accent-color);
+}
+
+.diary-todo-compose-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.diary-todo-bottom-bar {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-color);
+}
+
+.diary-todo-expand-btn {
+    width: 100%;
+    padding: 12px;
+    border: 2px dashed var(--border-color);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-family: var(--font-family);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.diary-todo-expand-btn:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    background: rgba(var(--accent-color-rgb, 255, 107, 107), 0.05);
+}
+
+.diary-todo-expand-btn i {
+    font-size: 18px;
+}
+
+@keyframes diarySlideUp {
+    from {
+opacity: 0;
+transform: translateY(10px);
+    }
+    to {
+opacity: 1;
+transform: translateY(0);
+    }
+}
+
+.diary-todo-form-row {
+    display: flex;
+    gap: 10px;
+}
+
+.diary-todo-form-field {
+    flex: 1;
+}
+
+.diary-todo-form-field label {
+    display: block;
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.diary-todo-form-field select {
+    width: 100%;
+    padding: 9px 10px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 10px;
+    background: var(--primary-bg);
+    color: var(--text-primary);
+    font-size: 13px;
+    outline: none;
+    font-family: var(--font-family);
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.diary-todo-form-field select:focus {
+    border-color: var(--accent-color);
+}
+
+/* ========== 提醒开关和选项 ========== */
+.diary-todo-reminder-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.diary-todo-reminder-toggle-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.diary-todo-switch {
+    position: relative;
+    display: inline-block;
+    width: 42px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.diary-todo-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.diary-todo-switch-slider {
+    position: absolute;
+    inset: 0;
+    background: var(--border-color);
+    border-radius: 24px;
+    transition: all 0.25s ease;
+}
+
+.diary-todo-switch-slider::before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 3px;
+    bottom: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transition: all 0.25s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+
+.diary-todo-switch input:checked + .diary-todo-switch-slider {
+    background: var(--accent-color);
+}
+
+.diary-todo-switch input:checked + .diary-todo-switch-slider::before {
+    transform: translateX(18px);
+}
+
+/* 提醒标签（列表中显示） */
+.diary-todo-reminder-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    color: var(--accent-color);
+    opacity: 0.8;
+}
+
+.diary-todo-reminder-tag i {
+    font-size: 10px;
+}
+
+/* 分类标签样式 */
+.diary-todo-category {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    margin-right: 6px;
+}
+
+/* ================================================================
+   二、习惯打卡
+   ================================================================ */
+.diary-habit-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px;
+    background: var(--primary-bg);
+    border-radius: 12px;
+    margin-bottom: 8px;
+    border: 1px solid var(--border-color);
+    transition: all 0.25s ease;
+}
+
+.diary-habit-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.diary-habit-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+.diary-habit-icon {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.diary-habit-detail {
+    min-width: 0;
+}
+
+.diary-habit-n
